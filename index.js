@@ -17,7 +17,7 @@ var server = app.listen(4000,() => {
       
     });
   }
-  console.log('go to http://localhost:3000');
+  console.log('go to http://165.227.87.229:4000');
   setInterval(function(){
     countData()
 }, 60000);
@@ -28,9 +28,9 @@ io.on('connection',(socket)=>{
   console.log('socket connection established');
 })
 var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
+    host: "db-mysql-sgp1-09454-do-user-8755285-0.b.db.ondigitalocean.com",
+    user: "ForexAnalysis",
+    password: "m2uc948zixgzpbv8",
     database: "forex"
   });
   var counter = 0;
@@ -75,14 +75,14 @@ var con = mysql.createConnection({
                       thirty_minute=counter==0?'0':counter<30?'------': Math.abs((gbp-result[0].current_value)*10000);
                       
                       ++counter;
-                      var sql = "INSERT INTO data (time,current_value,one_minute,five_minute,thirty_minute) VALUES ('"+timestamp+"','"+gbp+"','"+one_minute+"','"+five_minute+"','"+thirty_minute+"')";
+                      var sql = "INSERT INTO data (inserttime ,current_value,one_minute,five_minute,thirty_minute) VALUES ('"+timestamp+"','"+gbp+"','"+one_minute+"','"+five_minute+"','"+thirty_minute+"')";
                       con.query(sql, function (err, result) {
                         if (err) throw err;
                         else{
                           con.query("SELECT * FROM data ORDER BY id DESC LIMIT 1", function (err, result) {
                             if (err) throw err;
                             console.log(result);
-                            io.sockets.emit('faisal',JSON.stringify(result[0]));
+                            io.sockets.emit('forex',JSON.stringify(result[0]));
                           });
                         }
                         console.log(counter+"record inserted");
